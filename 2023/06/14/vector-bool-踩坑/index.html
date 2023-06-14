@@ -20,29 +20,33 @@
     var CONFIG = {"hostname":"yodamt.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Yodamt的博客">
-<meta property="og:url" content="https://yodamt.github.io/index.html">
+  <meta name="description" content="C++ vector＜bool＞ 的巨坑与 range_based_for 最近写代码的时候写了下面这样的代码： 123456789101112#include &lt;vector&gt;using ::std::vector;int main(){	vector&lt;vector&lt;bool&gt;&gt; v(10, vector&lt;bool&gt;(10, false));	fo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vector&lt;bool&gt; 踩坑">
+<meta property="og:url" content="https://yodamt.github.io/2023/06/14/vector-bool-%E8%B8%A9%E5%9D%91/index.html">
 <meta property="og:site_name" content="Yodamt的博客">
+<meta property="og:description" content="C++ vector＜bool＞ 的巨坑与 range_based_for 最近写代码的时候写了下面这样的代码： 123456789101112#include &lt;vector&gt;using ::std::vector;int main(){	vector&lt;vector&lt;bool&gt;&gt; v(10, vector&lt;bool&gt;(10, false));	fo">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-06-14T06:25:09.000Z">
+<meta property="article:modified_time" content="2023-06-14T06:36:18.739Z">
 <meta property="article:author" content="Yodamt">
-<meta property="article:tag" content="zh-CN">
+<meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://yodamt.github.io/">
+<link rel="canonical" href="https://yodamt.github.io/2023/06/14/vector-bool-%E8%B8%A9%E5%9D%91/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Yodamt的博客</title>
+  <title>vector<bool> 踩坑 | Yodamt的博客</title>
   
 
 
@@ -142,9 +146,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -160,10 +165,9 @@
       <meta itemprop="name" content="Yodamt的博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/06/14/vector-bool-%E8%B8%A9%E5%9D%91/" class="post-title-link" itemprop="url">vector<bool> 踩坑</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          vector<bool> 踩坑
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -187,7 +191,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>C++ vector＜bool＞ 的巨坑与 range_based_for</p>
+        <p>C++ vector＜bool＞ 的巨坑与 range_based_for</p>
 <p>最近写代码的时候写了下面这样的代码：</p>
 <figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> ::std::vector;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">	vector&lt;vector&lt;<span class="type">bool</span>&gt;&gt; <span class="built_in">v</span>(<span class="number">10</span>, <span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(<span class="number">10</span>, <span class="literal">false</span>));</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span>&amp; vx : v)</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span>&amp; velem : vx)</span><br><span class="line">		{</span><br><span class="line">			velem = <span class="literal">true</span>;</span><br><span class="line">		}</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
@@ -223,154 +227,33 @@
 
 <p>这就是 vector<bool> 与普通的 vector 的不同之处。<br>因此，C++ reference 中也警告我们，我们无法使用无特化的 bool 类型。如果这种特化的 bool 类型不能满足我们的需求，我们只能用 char、unsigned char 或其他的封装类型来代替，或者使用其他的容器如 deque 来代替。</bool></p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://yodamt.github.io/2023/06/14/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Yodamt">
-      <meta itemprop="description" content="">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yodamt的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/06/14/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">排序算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-06-14 10:11:29 / 修改时间：11:04:38" itemprop="dateCreated datePublished" datetime="2023-06-14T10:11:29+08:00">2023-06-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h1><h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>leetcode 官方的题解在特殊 case 超时（大量重复值，时间复杂度退化到 n^2)</p>
-<p><img src="/2023/06/14/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/image-20230614105542970.png" alt="image-20230614105542970"></p>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sort-an-array/solutions/178305/pai-xu-shu-zu-by-leetcode-solution/">912. 排序数组 - 力扣（Leetcode）</a></p>
-<p>所以需要一点小小的三路随机震撼</p>
-<figure class="highlight cpp"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">sortArray</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>{</span><br><span class="line">        <span class="built_in">quicksort</span>(nums,<span class="number">0</span>,nums.<span class="built_in">size</span>()<span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">return</span> nums;</span><br><span class="line">    }</span><br><span class="line">   <span class="comment">//三路快排：分为小于，等于，大于三部分</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">quicksort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;arr, <span class="type">int</span> low, <span class="type">int</span> high)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (low &gt;= high) <span class="keyword">return</span>;</span><br><span class="line">        <span class="type">int</span> randidx = low + <span class="built_in">rand</span>() % (high - low + <span class="number">1</span>);</span><br><span class="line">        <span class="built_in">swap</span>(arr[low], arr[randidx]);</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> pivot = arr[low];</span><br><span class="line">        <span class="type">int</span> lt = low, gt = high+<span class="number">1</span>, i = low + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; gt) {</span><br><span class="line">            <span class="keyword">if</span> (arr[i] &lt; pivot) {</span><br><span class="line">                <span class="built_in">swap</span>(arr[lt+<span class="number">1</span>], arr[i]);</span><br><span class="line">                lt++;</span><br><span class="line">                i++;</span><br><span class="line">            } <span class="keyword">else</span> <span class="keyword">if</span> (arr[i] &gt; pivot) {</span><br><span class="line">                <span class="built_in">swap</span>(arr[i], arr[gt<span class="number">-1</span>]);</span><br><span class="line">                gt--;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                i++;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="built_in">swap</span>(arr[low], arr[lt]);</span><br><span class="line">        <span class="built_in">quicksort</span>(arr, low, lt - <span class="number">1</span>);</span><br><span class="line">        <span class="built_in">quicksort</span>(arr, gt, high);</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/06/14/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="prev" title="排序算法">
+      <i class="fa fa-chevron-left"></i> 排序算法
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://yodamt.github.io/2023/06/14/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Yodamt">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yodamt的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/06/14/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-06-14 10:00:17" itemprop="dateCreated datePublished" datetime="2023-06-14T10:00:17+08:00">2023-06-14</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></tbody></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
