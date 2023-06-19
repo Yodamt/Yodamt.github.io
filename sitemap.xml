@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://yodamt.github.io/2023/06/19/leetcode%E6%9C%AC%E5%9C%B0%E8%B0%83%E8%AF%95%E6%A8%A1%E6%9D%BFc/</loc>
+    
+    <lastmod>2023-06-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://yodamt.github.io/2023/06/14/vector-bool-%E8%B8%A9%E5%9D%91/</loc>
     
     <lastmod>2023-06-19</lastmod>
