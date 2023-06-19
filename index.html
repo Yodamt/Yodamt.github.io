@@ -148,6 +148,75 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yodamt.github.io/2023/06/19/leetcode%E5%88%B7%E9%A2%98%E4%B8%AD%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yodamt">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yodamt的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/06/19/leetcode%E5%88%B7%E9%A2%98%E4%B8%AD%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" class="post-title-link" itemprop="url">leetcode 刷题中的小技巧</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-06-19 10:18:15 / 修改时间：10:21:39" itemprop="dateCreated datePublished" datetime="2023-06-19T10:18:15+08:00">2023-06-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="leetcode刷题中的一些小技巧"><a href="#leetcode刷题中的一些小技巧" class="headerlink" title="leetcode刷题中的一些小技巧"></a>leetcode 刷题中的一些小技巧</h1><h2 id="一些小技巧"><a href="#一些小技巧" class="headerlink" title="一些小技巧"></a>一些小技巧</h2><p>1. 整型数据的上下限可以写成 INT_MAX 和 INT_MIN</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cout&lt;&lt;INT_MIN;<span class="comment">//可以输出最小整型数据。</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>2. 利用 memset 可以实现 0 或 false 初始化</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">memset</span>(dp, <span class="number">0</span>, <span class="built_in">sizeof</span>(dp));<span class="comment">//这里的dp可以是二维数组</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>3. 二维 vector 的初始化</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(m, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n, <span class="number">0</span>));<span class="comment">//方法1</span></span><br><span class="line">vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; dp;<span class="comment">//方法2</span></span><br><span class="line">dp = vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; (m, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n, <span class="number">0</span>));</span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span> <span class="params">(m, <span class="number">0</span>)</span></span>;<span class="comment">//一维情况</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>4.map 的使用<br>unordered_map（哈希表）和 map 类似，都是存储的 key-value 的值，可以通过 key 快速索引到 value。不同的是 unordered_map 不会根据 key 的大小进行排序，存储时是根据 key 的 hash 值判断元素是否相同，即 unordered_map 内部元素是无序的，而 map 中的元素是按照二叉搜索树存储，进行中序遍历会得到有序遍历。</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span>  </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span>  </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">	unordered_map&lt;string, <span class="type">int</span>&gt;  dict; <span class="comment">// 声明unordered_map对象</span></span><br><span class="line">    <span class="comment">// 插入数据的三种方式</span></span><br><span class="line">	dict.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;string,<span class="type">int</span>&gt;(<span class="string">"apple"</span>,<span class="number">2</span>));</span><br><span class="line">	dict.<span class="built_in">insert</span>(unordered_map&lt;string, <span class="type">int</span>&gt;::<span class="built_in">value_type</span>(<span class="string">"orange"</span>,<span class="number">3</span>));</span><br><span class="line">	dict[<span class="string">"banana"</span>] = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 判断是否有元素</span></span><br><span class="line">	<span class="keyword">if</span>(dict.<span class="built_in">empty</span>())</span><br><span class="line">		cout&lt;&lt;<span class="string">"该字典无元素"</span>&lt;&lt;endl;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		cout&lt;&lt;<span class="string">"该字典共有"</span>&lt;&lt;dict.<span class="built_in">size</span>()&lt;&lt;<span class="string">"个元素"</span>&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 遍历</span></span><br><span class="line">	unordered_map&lt;string, <span class="type">int</span>&gt;::iterator iter;</span><br><span class="line">	<span class="keyword">for</span>(iter=dict.<span class="built_in">begin</span>();iter!=dict.<span class="built_in">end</span>();iter++)</span><br><span class="line">		cout&lt;&lt;iter-&gt;first&lt;&lt;ends&lt;&lt;iter-&gt;second&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 查找</span></span><br><span class="line">	<span class="comment">//用count函数来判定关键字是否出现，其缺点是无法定位数据出现位置,由于map的特性，一对一的映射关系，就决定了count函数的返回值只有两个，要么是0，要么是1，出现的情况，当然是返回1了</span></span><br><span class="line">	<span class="comment">//用find函数来定位数据出现位置，它返回的一个迭代器，当数据出现时，它返回数据所在位置的迭代器，如果map中没有要查找的数据，它返回的迭代器等于end函数返回的迭代器。</span></span><br><span class="line">	<span class="keyword">if</span>(dict.<span class="built_in">count</span>(<span class="string">"boluo"</span>)==<span class="number">0</span>)</span><br><span class="line">		cout&lt;&lt;<span class="string">"can't find boluo!"</span>&lt;&lt;endl;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		cout&lt;&lt;<span class="string">"find boluo!"</span>&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>((iter=dict.<span class="built_in">find</span>(<span class="string">"banana"</span>))!=dict.<span class="built_in">end</span>())</span><br><span class="line">		cout&lt;&lt;<span class="string">"banana="</span>&lt;&lt;iter-&gt;second&lt;&lt;endl;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		cout&lt;&lt;<span class="string">"can't find boluo!"</span>&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://yodamt.github.io/2023/06/14/vector-bool-%E8%B8%A9%E5%9D%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -434,12 +503,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
